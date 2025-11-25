@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Germanbot - German Learning Chatbot</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    /* Updated color palette with softer blues and warm accent */
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #dae8fc 0%, #fef7f7 100%);
+        font-family: "Poppins", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        user-select: none;
+    }
+
+    .chat-container {
+        width: 600px;
+        height: 800px;
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 12px 30px rgba(74, 108, 255, 0.25);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #c7d0ff;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .chat-container:hover {
+        box-shadow: 0 20px 45px rgba(74, 108, 255, 0.4);
+    }
+
+    .header {
+        background: linear-gradient(90deg, #668cff 0%, #92a8ff 100%);
+        color: white;
+        padding: 20px 15px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        user-select: text;
+    }
+
+    .header svg {
+        width: 30px;
+        height: 30px;
+        fill: white;
+        filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+        animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+        from { opacity: 0.7; }
+        to { opacity: 1; }
+    }
+
+    .messages {
+        flex: 1;
+        padding: 20px 25px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        scroll-behavior: smooth;
+        background: #fbfbff;
+    }
+
+    .msg {
+        max-width: 80%;
+        padding: 14px 18px;
+        border-radius: 20px;
+        font-size: 16px;
+        line-height: 1.5;
+        box-shadow: 0 4px 8px rgba(100, 100, 150, 0.08);
+        opacity: 0;
+        transform: translateY(15px);
+        animation: fadeInUp 0.4s forwards;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .user {
+        background: #6f89ff;
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 6px 12px rgba(111, 137, 255, 0.35);
+    }
+
+    .bot {
+        background: #ededf8;
+        color: #2d2d2d;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        box-shadow: 0 6px 12px rgba(150, 150, 200, 0.2);
+    }
+
+    .msg-content {
+        flex: 1;
+        white-space: pre-wrap;
+    }
+
+    .speaker-btn {
+        background: none;
+        border: none;
+        color: #5369ff;
+        cursor: pointer;
+        font-size: 20px;
+        padding: 2px 4px 0 4px;
+        min-width: 28px;
+        transition: transform 0.3s ease, color 0.3s ease;
+        user-select: none;
+        display: flex;
+        align-items: center;
+    }
+
+    .speaker-btn:hover {
+        transform: scale(1.3);
+        color: #2a47d9;
+    }
+
+    .speaker-btn:focus {
+        outline: 2px solid #2a47d9;
+        outline-offset: 2px;
+        border-radius: 6px;
+    }
+
+    .input-area {
+        display: flex;
+        padding: 14px 20px;
+        gap: 15px;
+        background: #f0f3ff;
+        border-top: 1px solid #c7d0ff;
+        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    input {
+        flex: 1;
+        padding: 14px 18px;
+        border-radius: 16px;
+        border: 1.8px solid #c7d0ff;
+        font-size: 17px;
+        transition: border-color 0.25s ease;
+        outline-offset: 2px;
+        outline: none;
+        font-weight: 500;
+        color: #2d2d2d;
+        user-select: text;
+    }
+
+    input::placeholder {
+        color: #8a8a9f;
+        font-weight: 400;
+    }
+
+    input:focus {
+        border-color: #4a6cff;
+        box-shadow: 0 0 8px rgba(74, 108, 255, 0.45);
+    }
+
+    button {
+        background: #6f89ff;
+        color: white;
+        border: none;
+        padding: 14px 22px;
+        border-radius: 16px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 600;
+        transition: background 0.3s ease, box-shadow 0.3s ease;
+        user-select: none;
+        box-shadow: 0 4px 10px rgba(111, 137, 255, 0.45);
+    }
+
+    button:hover {
+        background: #506bfc;
+        box-shadow: 0 8px 22px rgba(80, 107, 252, 0.7);
+    }
+
+    button:focus {
+        outline: 3px solid #506bfc;
+        outline-offset: 2px;
+    }
+    
+    .loading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        color: #5a5a6a;
+        font-style: italic;
+        padding-left: 22px;
+        user-select: none;
+        font-weight: 500;
+    }
+
+    .loading-dots {
+        display: inline-flex;
+        gap: 6px;
+    }
+
+    .loading-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #6f89ff;
+        animation: bounce 1.4s infinite;
+    }
+
+    .loading-dot:nth-child(2) {
+        animation-delay: 0.25s;
+    }
+
+    .loading-dot:nth-child(3) {
+        animation-delay: 0.5s;
+    }
+
+    @keyframes bounce {
+        0%, 100% { opacity: 0.35; transform: translateY(0); }
+        50% { opacity: 1; transform: translateY(-12px); }
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+<div class="chat-container">
+    <div class="header">Germanbot - Learn German</div>
+
+    <div class="messages" id="messages"></div>
+
+    <div id="loadingIndicator" class="loading hidden">
+        <span>ChatBot is typing</span>
+        <div class="loading-dots">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input id="msgInput" placeholder="Type your message..." onkeydown="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+let currentUtterance = null;
+let isPaused = false;
+let currentText = "";
+let currentSpeakerBtn = null;
+let selectedVoice = null;
+
+// Function to load and select preferred bilingual voice
+function selectPreferredVoice() {
+    return new Promise((resolve) => {
+        let voices = window.speechSynthesis.getVoices();
+        if (voices.length === 0) {
+            // If voices not yet loaded, wait for voiceschanged event
+            window.speechSynthesis.onvoiceschanged = () => {
+                voices = window.speechSynthesis.getVoices();
+                resolve(pickVoice(voices));
+            };
+        } else {
+            resolve(pickVoice(voices));
+        }
+    });
+}
+
+// Voice selection heuristic: prioritize voices that support German & English, or German voices
+function pickVoice(voices) {
+    // Prioritize: German voices that have "Google" or "Microsoft", or English voices with bilingual reputation
+    let preferredVoices = voices.filter(v =>
+        (v.lang.startsWith("de") && (v.name.includes("Google") || v.name.includes("Microsoft"))) ||
+        (v.lang.startsWith("en") && (v.name.includes("Google") || v.name.includes("Microsoft")))
+    );
+
+    if (preferredVoices.length > 0) {
+        // Prefer voices that can speak German (de) first
+        const germanVoices = preferredVoices.filter(v => v.lang.startsWith("de"));
+        if (germanVoices.length > 0) return germanVoices[0];
+
+        // Otherwise fallback to English ones in the list
+        return preferredVoices[0];
+    }
+
+    // If no preferred voices found, fallback to any German voice
+    const germanOnly = voices.find(v => v.lang.startsWith("de"));
+    if (germanOnly) return germanOnly;
+
+    // Otherwise fallback to any English voice
+    const englishOnly = voices.find(v => v.lang.startsWith("en"));
+    if (englishOnly) return englishOnly;
+
+    // Fallback to default voice
+    return voices[0] || null;
+}
+
+async function initializeVoice() {
+    selectedVoice = await selectPreferredVoice();
+    console.log('Selected voice:', selectedVoice ? selectedVoice.name + ' (' + selectedVoice.lang + ')' : 'No voice selected');
+}
+
+// Initialize voice on page load
+initializeVoice();
+
+async function sendMessage() {
+    const input = document.getElementById("msgInput");
+    const message = input.value.trim();
+    if (!message) return;
+
+    addMessage(message, "user");
+    input.value = "";
+
+    const loadingIndicator = document.getElementById("loadingIndicator");
+    loadingIndicator.classList.remove("hidden");
+
+    try {
+        const res = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message })
+        });
+
+        const data = await res.json();
+        addMessage(data.response, "bot");
+
+    } catch (error) {
+        addMessage("Error connecting to server.", "bot");
+    } finally {
+        loadingIndicator.classList.add("hidden");
+    }
+}
+
+function addMessage(text, type) {
+    const msgBox = document.createElement("div");
+    msgBox.className = `msg ${type}`;
+
+    if (type === "bot") {
+        const content = document.createElement("div");
+        content.className = "msg-content";
+
+        // Format bot reply text with line breaks and bullets preserved
+        const lines = text.split("\n").map(line => line.trim());
+        const formattedText = lines.join("<br>");
+        content.innerHTML = formattedText;
+
+        const speakerBtn = document.createElement("button");
+        speakerBtn.className = "speaker-btn";
+        speakerBtn.innerHTML = "▶️";
+        speakerBtn.title = "Play audio";
+        speakerBtn.onclick = () => toggleSpeech(text, speakerBtn);
+
+        msgBox.appendChild(content);
+        msgBox.appendChild(speakerBtn);
+    } else {
+        msgBox.textContent = text;
+    }
+
+    const messagesDiv = document.getElementById("messages");
+    messagesDiv.appendChild(msgBox);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+/**
+ * Toggles speech playback for the given text and button.
+ * Starts new speech if text differs from current, otherwise toggles pause/resume.
+ */
+function toggleSpeech(text, btn) {
+    if (!text || !btn) return;
+  
+    if (currentText !== text) {
+        // New text requested, stop any current speech and start new
+        stopSpeech();
+        startSpeech(text, btn);
+    } else {
+        // Same text requested, toggle pause/resume if speech is ongoing
+        if (isPaused) {
+            resumeSpeech(btn);
+        } else if (window.speechSynthesis.speaking) {
+            pauseSpeech(btn);
+        } else {
+            // If speech finished or stopped, start speech again
+            startSpeech(text, btn);
+        }
+    }
+}
+
+/**
+ * Starts speech synthesis for the given text, updates UI and internal state.
+ */
+function startSpeech(text, btn) {
+    window.speechSynthesis.cancel(); // Ensure any ongoing speech is stopped
+  
+    currentUtterance = null;
+    isPaused = false;
+    currentText = text;
+    currentSpeakerBtn = btn;
+  
+    btn.innerHTML = "⏸️";
+    btn.title = "Pause audio";
+  
+    // Combine lines into single string for speech
+    const combinedText = text.split("\n").map(line => line.trim()).join(". ");
+  
+    const utterance = new SpeechSynthesisUtterance(combinedText);
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+    }
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+  
+    currentUtterance = utterance;
+  
+    utterance.onend = () => {
+        resetSpeechState();
+    };
+    utterance.onerror = (e) => {
+        console.error('SpeechSynthesisUtterance error:', e);
+        resetSpeechState();
+    };
+  
+    window.speechSynthesis.speak(utterance);
+}
+
+/**
+ * Pauses ongoing speech synthesis, updates UI and internal state.
+ */
+function pauseSpeech(btn) {
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+        window.speechSynthesis.pause();
+        isPaused = true;
+        if (btn) {
+            btn.innerHTML = "▶️";
+            btn.title = "Resume audio";
+        }
+    }
+}
+
+/**
+ * Resumes paused speech synthesis, updates UI and internal state.
+ */
+function resumeSpeech(btn) {
+    if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+        isPaused = false;
+        if (btn) {
+            btn.innerHTML = "⏸️";
+            btn.title = "Pause audio";
+        }
+    }
+}
+
+/**
+ * Stops any ongoing/paused speech synthesis and resets UI & state.
+ */
+function stopSpeech() {
+    if (window.speechSynthesis.speaking || window.speechSynthesis.paused) {
+        window.speechSynthesis.cancel();
+    }
+    resetSpeechState();
+}
+
+/**
+ * Resets speech state variables and UI button to default.
+ */
+function resetSpeechState() {
+    currentUtterance = null;
+    isPaused = false;
+    currentText = "";
+    if (currentSpeakerBtn) {
+        currentSpeakerBtn.innerHTML = "▶️";
+        currentSpeakerBtn.title = "Play audio";
+        currentSpeakerBtn = null;
+    }
+}
+</script>
+
+</body>
+</html>
