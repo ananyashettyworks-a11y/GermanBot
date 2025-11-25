@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 Flask
 Flask-Cors
 google-generativeai
 gunicorn
+=======
+Flask
+Flask-Cors
+google-generativeai
+gunicorn
+>>>>>>> 87f5de73cba17a18ca5857311219f5746ba9952d
