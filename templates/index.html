@@ -431,28 +431,37 @@ function extractCleanText(text) {
 }
 
 /**
- * Detects if text contains German words
+ * Detects language and returns language code
  */
-function detectLanguageAndSelectVoice(text) {
-    const germanWords = /\b(ich|der|die|das|ein|eine|und|zu|nicht|ist|haben|sein|guten|tag|hallo|danke|bitte)\b/gi;
-    const hasGerman = germanWords.test(text);
-    
+function detectLanguage(text) {
+    const germanWords = /\b(ich|der|die|das|ein|eine|und|zu|nicht|ist|haben|sein|guten|tag|hallo|danke|bitte|drei|elf|zwanzig|greetings|gre|ist|sind)\b/gi;
+    return germanWords.test(text) ? 'de-DE' : 'en-US';
+}
+
+/**
+ * Selects best voice for the detected language
+ */
+function selectBestVoice(language) {
     const voices = window.speechSynthesis.getVoices();
-    if (hasGerman) {
-        // Prefer German voice for German content
-        const germanVoice = voices.find(v => v.lang.startsWith("de"));
-        if (germanVoice) return germanVoice;
-    }
+    if (!voices || voices.length === 0) return null;
     
-    // Use selected voice or fallback
-    return selectedVoice || voices[0];
+    // Try to find best match for language
+    let bestVoice = voices.find(v => v.lang === language);
+    if (bestVoice) return bestVoice;
+    
+    // Fallback to language prefix match
+    bestVoice = voices.find(v => v.lang.startsWith(language.split('-')[0]));
+    if (bestVoice) return bestVoice;
+    
+    // Last resort: first available voice
+    return voices[0];
 }
 
 /**
  * Starts speech synthesis for the given text, updates UI and internal state.
  */
 function startSpeech(text, btn) {
-    window.speechSynthesis.cancel(); // Ensure any ongoing speech is stopped
+    window.speechSynthesis.cancel();
   
     currentUtterance = null;
     isPaused = false;
@@ -462,19 +471,24 @@ function startSpeech(text, btn) {
     btn.innerHTML = "⏸️";
     btn.title = "Pause audio";
   
-    // Clean text: remove bullets and special characters
     const cleanedText = extractCleanText(text);
-    
-    // Detect language and select appropriate voice
-    const voiceToUse = detectLanguageAndSelectVoice(cleanedText);
+    const language = detectLanguage(cleanedText);
+    const voiceToUse = selectBestVoice(language);
   
     const utterance = new SpeechSynthesisUtterance(cleanedText);
+    
+    // Set language explicitly for proper pronunciation
+    utterance.lang = language;
+    
+    // Set voice if available
     if (voiceToUse) {
         utterance.voice = voiceToUse;
     }
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+    
+    // Adjust settings for natural pronunciation
+    utterance.rate = 0.85;        // Slightly slower for clarity
+    utterance.pitch = 1.0;        // Normal pitch
+    utterance.volume = 1.0;       // Full volume
   
     currentUtterance = utterance;
   
@@ -482,7 +496,7 @@ function startSpeech(text, btn) {
         resetSpeechState();
     };
     utterance.onerror = (e) => {
-        console.error('SpeechSynthesisUtterance error:', e);
+        console.error('Speech error:', e);
         resetSpeechState();
     };
   
