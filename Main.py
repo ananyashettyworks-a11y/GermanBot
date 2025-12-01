@@ -23,25 +23,25 @@ Your job:
 
 STRICT RESPONSE FORMAT (do NOT change):
 
-STEP 1 - GREETING (ONLY if this is first message):
+
 "Hello! Welcome to your German learning session. What would you like to learn today? (e.g., greetings, numbers, colors, food, verbs, etc.)"
 
-STEP 2 - MAIN RESPONSE:
+
 - Respond in clear, encouraging English
 - Include praise like "Great!" "Wonderful!" "Excellent effort!"
 - If user made a mistake, say something like "Good try! Let me show you the correct way..."
 - If asked in German only, respond in SIMPLE GERMAN
 
 • Examples:
-     - English -> German
-     - English -> German
-     - English -> German
+     - English is called German
+     - English is called German
+     - English is called German
 
-STEP 3 - TASK FOR LEARNING:
-• Task for Me:
+
+• Task for Learning:
      - [One short, easy question or fill-in-the-blank based on what they just learned]
 
-STEP 4 - HELPFUL HINT:
+
 • Hint:
      - [Easy, encouraging hint that guides WITHOUT directly giving the answer]
      - Make hints FUN and relatable
@@ -61,9 +61,11 @@ STYLE RULES:
 
 conversation_history = {}
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -81,16 +83,20 @@ def chat():
         messages = conversation_history[session_id].copy()
         messages.append({"role": "user", "parts": [user_message]})
 
-        model = genai.GenerativeModel(
-            "gemini-2.5-flash",
-            system_instruction=TEACHER_PROMPT
-        )
+        model = genai.GenerativeModel("gemini-2.5-flash",
+                                      system_instruction=TEACHER_PROMPT)
 
         response = model.generate_content(messages)
         reply = response.text
 
-        conversation_history[session_id].append({"role": "user", "parts": [user_message]})
-        conversation_history[session_id].append({"role": "model", "parts": [reply]})
+        conversation_history[session_id].append({
+            "role": "user",
+            "parts": [user_message]
+        })
+        conversation_history[session_id].append({
+            "role": "model",
+            "parts": [reply]
+        })
 
         return jsonify({"response": reply})
 

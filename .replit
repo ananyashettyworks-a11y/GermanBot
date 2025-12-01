@@ -31,6 +31,10 @@ expertMode = true
 localPort = 5000
 externalPort = 80
 
+[[ports]]
+localPort = 38961
+externalPort = 3000
+
 [deployment]
 deploymentTarget = "autoscale"
 run = ["gunicorn", "--bind=0.0.0.0:8080", "--workers=2", "Main:app"]

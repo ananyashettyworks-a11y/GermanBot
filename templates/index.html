@@ -408,6 +408,40 @@ function toggleSpeech(text, btn) {
 }
 
 /**
+ * Extracts clean text from bot response, removing bullets, special chars, and formatting
+ */
+function extractCleanText(text) {
+    // Remove bullet points, dashes, arrows, and special formatting
+    let cleanText = text
+        .replace(/^[\s•\-\*→→→]+/gm, '') // Remove bullets, dashes, arrows from start
+        .replace(/•|→|-(?=\s|$)/g, '')     // Remove remaining bullets/arrows
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0 && line !== '-' && line !== '•')
+        .join('. ');
+    
+    return cleanText;
+}
+
+/**
+ * Detects if text contains German words
+ */
+function detectLanguageAndSelectVoice(text) {
+    const germanWords = /\b(ich|der|die|das|ein|eine|und|zu|nicht|ist|haben|sein|guten|tag|hallo|danke|bitte)\b/gi;
+    const hasGerman = germanWords.test(text);
+    
+    const voices = window.speechSynthesis.getVoices();
+    if (hasGerman) {
+        // Prefer German voice for German content
+        const germanVoice = voices.find(v => v.lang.startsWith("de"));
+        if (germanVoice) return germanVoice;
+    }
+    
+    // Use selected voice or fallback
+    return selectedVoice || voices[0];
+}
+
+/**
  * Starts speech synthesis for the given text, updates UI and internal state.
  */
 function startSpeech(text, btn) {
@@ -421,12 +455,15 @@ function startSpeech(text, btn) {
     btn.innerHTML = "⏸️";
     btn.title = "Pause audio";
   
-    // Combine lines into single string for speech
-    const combinedText = text.split("\n").map(line => line.trim()).join(". ");
+    // Clean text: remove bullets and special characters
+    const cleanedText = extractCleanText(text);
+    
+    // Detect language and select appropriate voice
+    const voiceToUse = detectLanguageAndSelectVoice(cleanedText);
   
-    const utterance = new SpeechSynthesisUtterance(combinedText);
-    if (selectedVoice) {
-        utterance.voice = selectedVoice;
+    const utterance = new SpeechSynthesisUtterance(cleanedText);
+    if (voiceToUse) {
+        utterance.voice = voiceToUse;
     }
     utterance.rate = 0.9;
     utterance.pitch = 1;
