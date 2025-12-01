@@ -8,47 +8,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-    /* Updated color palette with softer blues and warm accent */
+    /* Premium color palette - Modern & Inviting */
     body {
         margin: 0;
-        background: linear-gradient(135deg, #dae8fc 0%, #fef7f7 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         font-family: "Poppins", sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
         user-select: none;
+        min-height: 100vh;
     }
 
     .chat-container {
         width: 600px;
         height: 800px;
         background: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 12px 30px rgba(74, 108, 255, 0.25);
+        border-radius: 28px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        border: 1px solid #c7d0ff;
-        transition: box-shadow 0.3s ease;
+        border: none;
+        transition: all 0.3s ease;
     }
 
     .chat-container:hover {
-        box-shadow: 0 20px 45px rgba(74, 108, 255, 0.4);
+        box-shadow: 0 35px 80px rgba(0, 0, 0, 0.35);
+        transform: translateY(-5px);
     }
 
     .header {
-        background: linear-gradient(90deg, #668cff 0%, #92a8ff 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 20px 15px;
+        padding: 24px 20px;
         text-align: center;
-        font-size: 22px;
-        font-weight: 700;
+        font-size: 24px;
+        font-weight: 800;
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 12px;
         user-select: text;
+        letter-spacing: 0.5px;
     }
 
     .header svg {
@@ -66,28 +69,42 @@
 
     .messages {
         flex: 1;
-        padding: 20px 25px;
+        padding: 24px 28px;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 16px;
         scroll-behavior: smooth;
-        background: #fbfbff;
+        background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 100%);
+    }
+
+    .messages::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .messages::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
     }
 
     .msg {
-        max-width: 80%;
+        max-width: 85%;
         padding: 14px 18px;
         border-radius: 20px;
-        font-size: 16px;
-        line-height: 1.5;
-        box-shadow: 0 4px 8px rgba(100, 100, 150, 0.08);
+        font-size: 15px;
+        line-height: 1.6;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         opacity: 0;
-        transform: translateY(15px);
-        animation: fadeInUp 0.4s forwards;
+        transform: translateY(10px);
+        animation: slideIn 0.3s ease-out forwards;
+        word-wrap: break-word;
     }
 
-    @keyframes fadeInUp {
+    @keyframes slideIn {
         to {
             opacity: 1;
             transform: translateY(0);
@@ -95,22 +112,24 @@
     }
 
     .user {
-        background: #6f89ff;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         align-self: flex-end;
-        border-bottom-right-radius: 4px;
-        box-shadow: 0 6px 12px rgba(111, 137, 255, 0.35);
+        border-bottom-right-radius: 6px;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+        font-weight: 500;
     }
 
     .bot {
-        background: #ededf8;
-        color: #2d2d2d;
+        background: #f0f0f7;
+        color: #1a1a2e;
         align-self: flex-start;
-        border-bottom-left-radius: 4px;
+        border-bottom-left-radius: 6px;
         display: flex;
         align-items: flex-start;
-        gap: 12px;
-        box-shadow: 0 6px 12px rgba(150, 150, 200, 0.2);
+        gap: 14px;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        padding: 14px 18px;
     }
 
     .msg-content {
@@ -119,95 +138,110 @@
     }
 
     .speaker-btn {
-        background: linear-gradient(135deg, #6f89ff 0%, #5369ff 100%);
-        border: 2px solid #4a5dd9;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
         color: white;
         cursor: pointer;
-        font-size: 18px;
-        padding: 8px 12px;
-        min-width: 44px;
+        font-size: 13px;
+        padding: 9px 14px;
+        min-width: auto;
         border-radius: 12px;
-        transition: all 0.3s ease;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         user-select: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 8px rgba(74, 108, 255, 0.25);
+        gap: 6px;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
         font-weight: 600;
         position: relative;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
 
     .speaker-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(74, 108, 255, 0.4);
-        background: linear-gradient(135deg, #7a96ff 0%, #6070ff 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        background: linear-gradient(135deg, #7a8ef5 0%, #8456b8 100%);
     }
 
     .speaker-btn:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(74, 108, 255, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(102, 126, 234, 0.4);
     }
 
     .speaker-btn:focus {
-        outline: 2px solid #2a47d9;
-        outline-offset: 2px;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), 0 4px 12px rgba(102, 126, 234, 0.35);
     }
 
     .input-area {
         display: flex;
-        padding: 14px 20px;
-        gap: 15px;
-        background: #f0f3ff;
-        border-top: 1px solid #c7d0ff;
-        box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
+        padding: 18px 24px;
+        gap: 12px;
+        background: linear-gradient(180deg, #f8f9ff 0%, #f0f0f7 100%);
+        border-top: 1px solid #e5e7f0;
+        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
     }
 
     input {
         flex: 1;
         padding: 14px 18px;
-        border-radius: 16px;
-        border: 1.8px solid #c7d0ff;
-        font-size: 17px;
-        transition: border-color 0.25s ease;
-        outline-offset: 2px;
+        border-radius: 18px;
+        border: 2px solid #e5e7f0;
+        font-size: 15px;
+        transition: all 0.2s ease;
         outline: none;
         font-weight: 500;
-        color: #2d2d2d;
+        color: #1a1a2e;
         user-select: text;
+        font-family: "Poppins", sans-serif;
     }
 
     input::placeholder {
-        color: #8a8a9f;
+        color: #a0a0b0;
         font-weight: 400;
     }
 
     input:focus {
-        border-color: #4a6cff;
-        box-shadow: 0 0 8px rgba(74, 108, 255, 0.45);
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+        background: #ffffff;
+    }
+
+    #msgInput {
+        background: #ffffff;
     }
 
     button {
-        background: #6f89ff;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border: none;
-        padding: 14px 22px;
-        border-radius: 16px;
+        padding: 14px 28px;
+        border-radius: 18px;
         cursor: pointer;
-        font-size: 17px;
-        font-weight: 600;
-        transition: background 0.3s ease, box-shadow 0.3s ease;
+        font-size: 15px;
+        font-weight: 700;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         user-select: none;
-        box-shadow: 0 4px 10px rgba(111, 137, 255, 0.45);
+        box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
+        white-space: nowrap;
     }
 
     button:hover {
-        background: #506bfc;
-        box-shadow: 0 8px 22px rgba(80, 107, 252, 0.7);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+        background: linear-gradient(135deg, #7a8ef5 0%, #8456b8 100%);
+    }
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
     }
 
     button:focus {
-        outline: 3px solid #506bfc;
-        outline-offset: 2px;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2), 0 4px 14px rgba(102, 126, 234, 0.35);
     }
     
     .loading {
@@ -282,54 +316,44 @@ let currentText = "";
 let currentSpeakerBtn = null;
 let selectedVoice = null;
 
-// Function to load and select preferred bilingual voice
-function selectPreferredVoice() {
+// Select ONE consistent voice that handles both English and German
+function selectUniversalVoice() {
     return new Promise((resolve) => {
         let voices = window.speechSynthesis.getVoices();
         if (voices.length === 0) {
-            // If voices not yet loaded, wait for voiceschanged event
             window.speechSynthesis.onvoiceschanged = () => {
                 voices = window.speechSynthesis.getVoices();
-                resolve(pickVoice(voices));
+                resolve(chooseBestVoice(voices));
             };
         } else {
-            resolve(pickVoice(voices));
+            resolve(chooseBestVoice(voices));
         }
     });
 }
 
-// Voice selection heuristic: prioritize voices that support German & English, or German voices
-function pickVoice(voices) {
-    // Prioritize: German voices that have "Google" or "Microsoft", or English voices with bilingual reputation
-    let preferredVoices = voices.filter(v =>
-        (v.lang.startsWith("de") && (v.name.includes("Google") || v.name.includes("Microsoft"))) ||
-        (v.lang.startsWith("en") && (v.name.includes("Google") || v.name.includes("Microsoft")))
-    );
-
-    if (preferredVoices.length > 0) {
-        // Prefer voices that can speak German (de) first
-        const germanVoices = preferredVoices.filter(v => v.lang.startsWith("de"));
-        if (germanVoices.length > 0) return germanVoices[0];
-
-        // Otherwise fallback to English ones in the list
-        return preferredVoices[0];
+// Choose ONE best voice that works for both languages
+function chooseBestVoice(voices) {
+    // Prioritize Google voices as they're usually the best quality and multilingual
+    let googleVoices = voices.filter(v => v.name.includes("Google"));
+    if (googleVoices.length > 0) {
+        // Prefer German Google voice for better pronunciation
+        const germanGoogle = googleVoices.find(v => v.lang.startsWith("de"));
+        if (germanGoogle) return germanGoogle;
+        // Otherwise any Google voice
+        return googleVoices[0];
     }
 
-    // If no preferred voices found, fallback to any German voice
-    const germanOnly = voices.find(v => v.lang.startsWith("de"));
-    if (germanOnly) return germanOnly;
+    // Fallback to German voice
+    const germanVoice = voices.find(v => v.lang.startsWith("de"));
+    if (germanVoice) return germanVoice;
 
-    // Otherwise fallback to any English voice
-    const englishOnly = voices.find(v => v.lang.startsWith("en"));
-    if (englishOnly) return englishOnly;
-
-    // Fallback to default voice
+    // Last resort
     return voices[0] || null;
 }
 
 async function initializeVoice() {
-    selectedVoice = await selectPreferredVoice();
-    console.log('Selected voice:', selectedVoice ? selectedVoice.name + ' (' + selectedVoice.lang + ')' : 'No voice selected');
+    selectedVoice = await selectUniversalVoice();
+    console.log('Voice initialized:', selectedVoice ? selectedVoice.name : 'Default voice');
 }
 
 // Initialize voice on page load
@@ -458,75 +482,55 @@ function extractCleanText(text) {
 }
 
 /**
- * Detects language and returns language code
+ * Detects language for proper pronunciation
  */
 function detectLanguage(text) {
-    const germanWords = /\b(ich|der|die|das|ein|eine|und|zu|nicht|ist|haben|sein|guten|tag|hallo|danke|bitte|drei|elf|zwanzig|greetings|gre|ist|sind)\b/gi;
+    const germanWords = /\b(ich|der|die|das|ein|eine|und|zu|nicht|ist|haben|sein|guten|tag|hallo|danke|bitte|drei|elf|zwanzig|eins|zwei|grün|rot|blau)\b/gi;
     return germanWords.test(text) ? 'de-DE' : 'en-US';
 }
 
 /**
- * Selects best voice for the detected language
- */
-function selectBestVoice(language) {
-    const voices = window.speechSynthesis.getVoices();
-    if (!voices || voices.length === 0) return null;
-    
-    // Try to find best match for language
-    let bestVoice = voices.find(v => v.lang === language);
-    if (bestVoice) return bestVoice;
-    
-    // Fallback to language prefix match
-    bestVoice = voices.find(v => v.lang.startsWith(language.split('-')[0]));
-    if (bestVoice) return bestVoice;
-    
-    // Last resort: first available voice
-    return voices[0];
-}
-
-/**
- * Starts speech synthesis for the given text, updates UI and internal state.
+ * Starts speech synthesis for the given text with ONE consistent voice
  */
 function startSpeech(text, btn) {
+    // Cancel any existing speech
     window.speechSynthesis.cancel();
-  
+    
     currentUtterance = null;
     isPaused = false;
     currentText = text;
     currentSpeakerBtn = btn;
-  
-    // Update button to show pause state
+    
+    // Update button immediately
     updateButtonState(btn, true);
-  
+    
     const cleanedText = extractCleanText(text);
     const language = detectLanguage(cleanedText);
-    const voiceToUse = selectBestVoice(language);
-  
+    
     const utterance = new SpeechSynthesisUtterance(cleanedText);
     
-    // Set language explicitly for proper pronunciation
-    utterance.lang = language;
-    
-    // Set voice if available
-    if (voiceToUse) {
-        utterance.voice = voiceToUse;
+    // Use the same universal voice for all text
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
     }
     
-    // Adjust settings for natural pronunciation
-    utterance.rate = 0.85;        // Slightly slower for clarity
-    utterance.pitch = 1.0;        // Normal pitch
-    utterance.volume = 1.0;       // Full volume
-  
+    // Set language for proper pronunciation but keep same voice
+    utterance.lang = language;
+    utterance.rate = 0.85;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
     currentUtterance = utterance;
-  
+    
     utterance.onend = () => {
         resetSpeechState();
     };
+    
     utterance.onerror = (e) => {
         console.error('Speech error:', e);
         resetSpeechState();
     };
-  
+    
     window.speechSynthesis.speak(utterance);
 }
 
