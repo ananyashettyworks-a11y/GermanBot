@@ -337,11 +337,11 @@ async function sendMessage() {
     loadingIndicator.classList.remove("hidden");
 
     try {
-        const res = await fetch("https://ananyabshetty.pythonanywhere.com/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }) 
-        });
+       const res = await fetch("/chat", {
+           method: "POST", 
+           headers: { "Content-Type": "application/json" }, 
+           body: JSON.stringify({ message })
+           });    
 
         const data = await res.json();
         addMessage(data.response, "bot");
