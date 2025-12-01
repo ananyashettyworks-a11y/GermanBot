@@ -17,7 +17,16 @@ Preferred communication style: Simple, everyday language.
 - Responsive chat container (600px x 800px) with hover effects and smooth transitions
 - Color scheme: Soft blues (#dae8fc, #668cff, #92a8ff) with warm accents for a friendly learning environment
 
-**Rationale**: A frameworkless approach keeps the application lightweight and eliminates build complexity, making it ideal for a simple chatbot interface. The modern CSS provides a polished user experience without additional dependencies.
+**Bilingual Voice Assistant**
+- Text-to-speech powered by Web Speech API with natural pronunciation
+- Automatic language detection: German (de-DE) for German content, English (en-US) for English content
+- Intelligent voice selection that matches detected language
+- Speech rate optimized at 0.85 for clear, natural pronunciation
+- Speaker button (▶️) on each bot response for easy audio playback
+- Pause/resume functionality with visual button state feedback
+- Clean text extraction that removes formatting characters (bullets, arrows) before speaking
+
+**Rationale**: A frameworkless approach keeps the application lightweight and eliminates build complexity. The bilingual voice assistant enhances learning by providing native pronunciation examples and making the app more interactive and accessible.
 
 ## Backend Architecture
 
@@ -42,12 +51,21 @@ Preferred communication style: Simple, everyday language.
 - Structured prompting system with `TEACHER_PROMPT` defining consistent response format
 
 **Prompt Engineering Strategy**
-- Hard-coded system prompt enforces strict response structure
-- Format includes: English explanation, German translation, examples, learning tasks, and hints
+- Hard-coded system prompt enforces strict response structure with 4-step learning format
+- Format includes: English-only encouraging response, German-translated examples, learning tasks, and hints
 - A1-level constraint ensures beginner-appropriate content
+- Examples use "is called ... in German" format for natural voice pronunciation
 - Bullet-point formatting for clarity and parseability
+- Encouraging tone with positive feedback even for mistakes
 
-**Rationale**: Gemini AI provides robust language understanding and generation capabilities. The structured prompt ensures consistent, pedagogically sound responses that follow language learning best practices. Environment-based API key management supports secure deployment.
+**Learning Experience Features**
+- Greeting system: Bot welcomes user and asks what topic to learn
+- Encouraging feedback: All responses include positive reinforcement in English only
+- Diverse examples: Three completely different examples per response to maximize learning variety
+- Easy hints: Non-direct but accessible hints to guide learning
+- Conversation history: Maintained per session for context awareness
+
+**Rationale**: Gemini AI provides robust language understanding and generation capabilities. The structured prompt with 4-step format ensures consistent, pedagogically sound responses that follow language learning best practices. The voice assistant provides native pronunciation models, making learning more immersive and effective for A1 beginners.
 
 ## Deployment Configuration
 
