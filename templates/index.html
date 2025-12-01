@@ -495,8 +495,8 @@ function startSpeech(text, btn) {
     currentText = text;
     currentSpeakerBtn = btn;
   
-    btn.innerHTML = "⏸️";
-    btn.title = "Pause audio";
+    // Update button to show pause state
+    updateButtonState(btn, true);
   
     const cleanedText = extractCleanText(text);
     const language = detectLanguage(cleanedText);
@@ -537,10 +537,7 @@ function pauseSpeech(btn) {
     if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
         window.speechSynthesis.pause();
         isPaused = true;
-        if (btn) {
-            btn.innerHTML = "▶️";
-            btn.title = "Resume audio";
-        }
+        updateButtonState(btn, false);
     }
 }
 
@@ -551,10 +548,7 @@ function resumeSpeech(btn) {
     if (window.speechSynthesis.paused) {
         window.speechSynthesis.resume();
         isPaused = false;
-        if (btn) {
-            btn.innerHTML = "⏸️";
-            btn.title = "Pause audio";
-        }
+        updateButtonState(btn, true);
     }
 }
 
@@ -576,8 +570,7 @@ function resetSpeechState() {
     isPaused = false;
     currentText = "";
     if (currentSpeakerBtn) {
-        currentSpeakerBtn.innerHTML = "▶️";
-        currentSpeakerBtn.title = "Play audio";
+        updateButtonState(currentSpeakerBtn, false);
         currentSpeakerBtn = null;
     }
 }
