@@ -119,28 +119,38 @@
     }
 
     .speaker-btn {
-        background: none;
-        border: none;
-        color: #5369ff;
+        background: linear-gradient(135deg, #6f89ff 0%, #5369ff 100%);
+        border: 2px solid #4a5dd9;
+        color: white;
         cursor: pointer;
-        font-size: 20px;
-        padding: 2px 4px 0 4px;
-        min-width: 28px;
-        transition: transform 0.3s ease, color 0.3s ease;
+        font-size: 18px;
+        padding: 8px 12px;
+        min-width: 44px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
         user-select: none;
         display: flex;
         align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(74, 108, 255, 0.25);
+        font-weight: 600;
+        position: relative;
     }
 
     .speaker-btn:hover {
-        transform: scale(1.3);
-        color: #2a47d9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(74, 108, 255, 0.4);
+        background: linear-gradient(135deg, #7a96ff 0%, #6070ff 100%);
+    }
+
+    .speaker-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(74, 108, 255, 0.3);
     }
 
     .speaker-btn:focus {
         outline: 2px solid #2a47d9;
         outline-offset: 2px;
-        border-radius: 6px;
     }
 
     .input-area {
@@ -404,6 +414,23 @@ function toggleSpeech(text, btn) {
             // If speech finished or stopped, start speech again
             startSpeech(text, btn);
         }
+    }
+}
+
+/**
+ * Unified button state update to ensure consistent appearance
+ */
+function updateButtonState(btn, isPlaying) {
+    if (!btn) return;
+    
+    if (isPlaying) {
+        btn.innerHTML = "⏸️ Pause";
+        btn.title = "Pause audio";
+        btn.setAttribute('aria-label', 'Pause audio');
+    } else {
+        btn.innerHTML = "▶️ Play";
+        btn.title = "Play audio";
+        btn.setAttribute('aria-label', 'Play audio');
     }
 }
 
