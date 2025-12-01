@@ -424,12 +424,15 @@ function addMessage(text, type) {
 function toggleSpeech(text, btn) {
     if (!text || !btn) return;
   
-    if (currentText !== text) {
-        // New text requested, stop any current speech and start new
+    // Check if this is a different message (different button clicked)
+    const isDifferentMessage = (currentSpeakerBtn !== btn) || (currentText !== text);
+    
+    if (isDifferentMessage) {
+        // New message clicked, stop any current speech and start new
         stopSpeech();
         startSpeech(text, btn);
     } else {
-        // Same text requested, toggle pause/resume if speech is ongoing
+        // Same message clicked, toggle pause/resume
         if (isPaused) {
             resumeSpeech(btn);
         } else if (window.speechSynthesis.speaking) {
@@ -538,7 +541,8 @@ function startSpeech(text, btn) {
  * Pauses ongoing speech synthesis, updates UI and internal state.
  */
 function pauseSpeech(btn) {
-    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+    // Make sure this is the current button and speech is actually playing
+    if (btn === currentSpeakerBtn && (window.speechSynthesis.speaking || currentUtterance)) {
         window.speechSynthesis.pause();
         isPaused = true;
         updateButtonState(btn, false);
@@ -549,7 +553,8 @@ function pauseSpeech(btn) {
  * Resumes paused speech synthesis, updates UI and internal state.
  */
 function resumeSpeech(btn) {
-    if (window.speechSynthesis.paused) {
+    // Make sure this is the current button and speech is actually paused
+    if (btn === currentSpeakerBtn && window.speechSynthesis.paused) {
         window.speechSynthesis.resume();
         isPaused = false;
         updateButtonState(btn, true);
